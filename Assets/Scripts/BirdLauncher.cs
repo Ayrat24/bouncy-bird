@@ -7,6 +7,7 @@ public class BirdLauncher : MonoBehaviour
     [SerializeField] float forceMultiplier = 1;
     [SerializeField] float minimumForce = 10;
     [SerializeField] float maxPullDistance = 2;
+    [SerializeField] float worldDistancePerMouseDistance = 1;
     [SerializeField] PlayerController player;
     [SerializeField] Transform playerHolder;
     [SerializeField] LineRenderer lineRenderer;
@@ -15,6 +16,8 @@ public class BirdLauncher : MonoBehaviour
 
     private bool launcherActive;
     private Camera camera;
+    private float baseCameraOrtSize;
+
 
     void Start()
     {
@@ -43,10 +46,13 @@ public class BirdLauncher : MonoBehaviour
             Vector3 mousePos = camera.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
 
-            Vector3 clampedPosition = Vector3.ClampMagnitude(mousePos - playerHolder.position, maxPullDistance);
+
+            Vector3 direction = (mousePos - playerHolder.position).normalized;
+            float distance = Vector3.Distance(mousePos, playerHolder.position) * worldDistancePerMouseDistance;
+            Vector3 clampedPosition = Vector3.ClampMagnitude(direction * distance, maxPullDistance);
             player.transform.position = clampedPosition + playerHolder.position;
 
-            float seconsToPredict = lineLength;
+            float seconsToPredict = lineLength * (clampedPosition.magnitude / maxPullDistance);
             float step = 0.1f;
             int numberOfSteps = (int)(seconsToPredict / step);
 
@@ -64,7 +70,6 @@ public class BirdLauncher : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             lineRenderer.enabled = false;
-
             launcherActive = false;
             player.EnableRigidBody();
 
@@ -72,6 +77,8 @@ public class BirdLauncher : MonoBehaviour
                 * Vector2.Distance(playerHolder.position, player.transform.position) * forceMultiplier);
 
             player.AddForce(force);
+
+            GameController.Instance.OnBirdLaunched();
         }
     }
 
