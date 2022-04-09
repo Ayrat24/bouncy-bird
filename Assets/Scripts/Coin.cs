@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private int score = 100;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag.Equals("Player"))
         {
             GameController.Instance.OnCoinPickedUp();
+            ScoreController.Instance.AddScore(score, transform.position);
             gameObject.SetActive(false);
         }
     }

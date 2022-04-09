@@ -62,15 +62,15 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (shouldStop)
-        {
-            shouldStop = false;
-
-            Vector3 launcherPos = transform.position;
-            launcherPos.y += 2f;
-            birdLauncher.transform.position = launcherPos;
-
-            birdLauncher.PutPlayerIntoLauncher();
-        }
+        // if (shouldStop)
+        // {
+        //     shouldStop = false;
+        //
+        //     Vector3 launcherPos = transform.position;
+        //     launcherPos.y += 2f;
+        //     birdLauncher.transform.position = launcherPos;
+        //
+        //     birdLauncher.PutPlayerIntoLauncher();
+        // }
     }
 }
