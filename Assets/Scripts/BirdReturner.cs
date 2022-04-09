@@ -53,7 +53,6 @@ public class BirdReturner : MonoBehaviour
             
             playerIsInside = true;
             elapsedTimeInside += Time.deltaTime;
-            Debug.Log("Player stay " + elapsedTimeInside);
 
             if (elapsedTimeInside > maxTimeInside)
             {
