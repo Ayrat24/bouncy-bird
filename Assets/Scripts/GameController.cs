@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -19,6 +20,8 @@ public class GameController : MonoBehaviour
 
     [SerializeField] UIElements uIElements;
     private BirdLauncher birdLauncher;
+
+    public bool IsGamePaused;
     
     private void Awake()
     {
@@ -85,14 +88,51 @@ public class GameController : MonoBehaviour
 
     private void OnWin()
     {
+        IsGamePaused = true;
+        ScoreController scoreController = FindObjectOfType<ScoreController>();
+        uIElements.winOverlayCurrentScore.text = "Score: " + scoreController.Score;
+        uIElements.winOverlayBestScore.text = "High score: " + scoreController.GetHighScore(SceneManager.GetActiveScene().name);
+        
+        uIElements.menuOverlay.SetActive(true);
         uIElements.winOverlay.SetActive(true);
     }
 
     private void OnLose()
     {
+        IsGamePaused = true;
+        uIElements.menuOverlay.SetActive(true);
         uIElements.loseOverlay.SetActive(true);
     }
 
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void LoadNextLevel()
+    {
+        
+    }
+
+    public void GoToMainMenu()
+    {
+        
+    }
+    
+    public void Pause()
+    {
+        IsGamePaused = true;
+        uIElements.menuOverlay.SetActive(true);
+        uIElements.menu.SetActive(true);
+    }
+
+    public void Unpause()
+    {
+        IsGamePaused = false;
+        uIElements.menuOverlay.SetActive(false);
+        uIElements.menu.SetActive(false);
+    }
+    
     private void OnDestroy()
     {
         birdLauncher.OnBirdLaunched -= OnBirdLaunched;
@@ -105,7 +145,14 @@ public class GameController : MonoBehaviour
         public TextMeshProUGUI coinCountText;
         public TextMeshProUGUI launchCountText;
 
+        public GameObject menuOverlay;
+        
         public GameObject winOverlay;
+        public TextMeshProUGUI winOverlayCurrentScore;
+        public TextMeshProUGUI winOverlayBestScore;
+        
         public GameObject loseOverlay;
+
+        public GameObject menu;
     }
 }

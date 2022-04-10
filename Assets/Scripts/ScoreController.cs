@@ -8,6 +8,7 @@ using TMPro;
 public class ScoreController : MonoBehaviour
 {
     private int score;
+    public int Score => score;
     
     [SerializeField] private AddScoreAnimation scoreAnimation;
     [SerializeField] private Canvas parentCanvas;
@@ -72,5 +73,17 @@ public class ScoreController : MonoBehaviour
             .OnUpdate(() => scoreText.text = "Score: " + oldScore));
         addScoreSequence.Append(scoreText.transform.DOScale(1f, 0.2f));
         addScoreSequence.Play();
+    }
+
+    public int GetHighScore(string sceneName)
+    {
+        int highScore = PlayerPrefs.GetInt("HighScore" + sceneName, 0);
+        if (score > highScore)
+        {
+            highScore = score;
+            PlayerPrefs.SetInt("HighScore" + sceneName, score);
+        }
+
+        return highScore;
     }
 }

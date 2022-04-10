@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BirdLauncher : MonoBehaviour
 {
@@ -33,6 +34,9 @@ public class BirdLauncher : MonoBehaviour
 
     void Update()
     {
+        if(GameController.Instance.IsGamePaused)
+            return;
+        
         if (Input.GetMouseButtonDown(1))
         {
             PutPlayerIntoLauncher();
@@ -41,15 +45,20 @@ public class BirdLauncher : MonoBehaviour
         if (!launcherActive)
             return;
 
+        if (!lineRenderer.enabled && EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+        
         if (Input.GetMouseButtonDown(0))
         {
             lineRenderer.enabled = true;
         }
 
-            if (Input.GetMouseButton(0))
-            {
-                Aim();
-            }
+        if (Input.GetMouseButton(0))
+        {
+            Aim();
+        }
 
         if (Input.GetMouseButtonUp(0))
         {
